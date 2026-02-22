@@ -5,27 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Article Footer</title>
 
+  <!-- ✅ Umami 阅读量统计（正确位置） -->
+  <script defer src="https://cloud.umami.is/script.js"
+          data-website-id="8b1e0b9a-646c-4712-96b9-b98d4ba400c6">
+  </script>
+
   <style>
     body{
       margin:0;
       padding:18px 14px 26px;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
+                   Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
       background:#fff;
     }
+
     .box{max-width:820px;margin:0 auto;}
     .divider{height:1px;background:rgba(0,0,0,.08);margin:22px 0;}
-    .title{font-size:13px;letter-spacing:.12em;color:rgba(0,0,0,.45);margin-bottom:10px;}
-    .hint{font-size:14px;color:rgba(0,0,0,.78);line-height:1.75;margin-bottom:14px;}
-    .qr{display:flex;gap:26px;flex-wrap:wrap;}
+
+    .title{
+      font-size:13px;
+      letter-spacing:.12em;
+      color:rgba(0,0,0,.45);
+      margin-bottom:10px;
+    }
+
+    .hint{
+      font-size:14px;
+      color:rgba(0,0,0,.78);
+      line-height:1.75;
+      margin-bottom:14px;
+    }
+
+    .qr{
+      display:flex;
+      gap:26px;
+      flex-wrap:wrap;
+    }
+
     .qritem img{
-      width:150px;height:150px;object-fit:contain;
-      border-radius:14px;border:1px solid rgba(0,0,0,.08);background:#fff;
+      width:150px;
+      height:150px;
+      object-fit:contain;
+      border-radius:14px;
+      border:1px solid rgba(0,0,0,.08);
+      background:#fff;
       display:block;
     }
-    .cap{margin-top:8px;font-size:13px;color:rgba(0,0,0,.6);}
+
+    .cap{
+      margin-top:8px;
+      font-size:13px;
+      color:rgba(0,0,0,.6);
+    }
   </style>
 
-  <!-- LikeBtn（点赞，免费版） -->
+  <!-- LikeBtn -->
   <script>
     (function(d,e,s){
       if(d.getElementById("likebtn_wjs")) return;
@@ -40,34 +74,35 @@
 
 <body>
   <div class="box">
+
     <div class="divider"></div>
 
-    <!-- 点赞 -->
+    <!-- LIKE -->
     <div class="title">LIKE</div>
     <div class="hint">如果这篇文字让你产生一点共鸣，点个赞就好。</div>
     <div id="like_wrap"></div>
 
     <div class="divider"></div>
 
-    <!-- 打赏 -->
+    <!-- TIP -->
     <div class="title">TIP</div>
     <div class="hint">如果你愿意支持我继续写下去，可以请我喝杯咖啡。</div>
 
     <div class="qr">
       <div class="qritem">
-        <img src="https://greyson9213-png.github.io/my-notion-comments/wechat.jpg?v=1" />
+        <img src="https://raw.githubusercontent.com/greyson9213-png/my-notion-comments/main/wechat.jpg" />
         <div class="cap">微信打赏</div>
       </div>
 
       <div class="qritem">
-        <img src="https://greyson9213-png.github.io/my-notion-comments/alipay.jpg?v=1" />
+        <img src="https://raw.githubusercontent.com/greyson9213-png/my-notion-comments/main/alipay.jpg" />
         <div class="cap">支付宝打赏</div>
       </div>
     </div>
 
     <div class="divider"></div>
 
-    <!-- 评论 -->
+    <!-- COMMENTS -->
     <div class="title">COMMENTS</div>
     <div class="hint">欢迎留言（名字随便写个称呼即可）。</div>
 
@@ -80,7 +115,7 @@
     </div>
 
     <script>
-      // 把任意字符串变成稳定的短ID（用于“自动匹配每篇文章”）
+      // 自动匹配 Notion 每篇文章
       function hashToId(str){
         let h = 2166136261;
         for(let i=0;i<str.length;i++){
@@ -91,25 +126,20 @@
       }
 
       const qs = new URLSearchParams(location.search);
-
-      // 自动识别文章：优先用你传的 id（可选），否则用 Notion 的 referrer 生成唯一ID
       const ref = document.referrer || "";
       const autoKey = ref || location.href;
+
       const pageId = qs.get("id") || hashToId(autoKey);
-
-      // URL：优先用你传的 url（可选），否则用 referrer（更像“这篇文章的地址”）
       const pageUrl = qs.get("url") || ref || location.href;
-
-      // 标题：如果你愿意手动传 title 就显示；不传就固定 “Comments”
       const pageTitle = qs.get("title") || "Comments";
 
-      // ===== Cusdis 绑定（每篇文章独立评论区）=====
+      // Cusdis
       const c = document.getElementById("cusdis_thread");
       c.setAttribute("data-page-id", pageId);
       c.setAttribute("data-page-title", pageTitle);
       c.setAttribute("data-page-url", pageUrl);
 
-      // ===== LikeBtn 绑定（每篇文章独立点赞数）=====
+      // LikeBtn
       const likeWrap = document.getElementById("like_wrap");
       likeWrap.innerHTML = `
         <span class="likebtn-wrapper"
@@ -124,6 +154,7 @@
     </script>
 
     <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+
   </div>
 </body>
 </html>
