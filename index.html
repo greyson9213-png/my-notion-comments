@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Comments</title>
+    <style>
+      body { margin: 0; padding: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="cusdis_thread"></div>
+
+    <script>
+      const qs = new URLSearchParams(location.search);
+      const pageId = qs.get("id") || location.pathname;
+      const pageUrl = qs.get("url") || document.referrer || location.href;
+      const pageTitle = qs.get("title") || "Comments";
+
+      const el = document.getElementById("cusdis_thread");
+      el.setAttribute("data-host", "https://cusdis.com");
+      el.setAttribute("data-app-id", "fed5074a-893a-4a76-b4b3-8f6d28e6397");
+      el.setAttribute("data-page-id", pageId);
+      el.setAttribute("data-page-url", pageUrl);
+      el.setAttribute("data-page-title", pageTitle);
+    </script>
+
+    <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+  </body>
+</html>
