@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Article Footer</title>
 
-  <!-- ✅ Umami 阅读量统计（正确位置） -->
+  <!-- ✅ Umami（统计到后台，不会自动在页面显示阅读数字） -->
   <script defer src="https://cloud.umami.is/script.js"
           data-website-id="8b1e0b9a-646c-4712-96b9-b98d4ba400c6">
   </script>
@@ -18,48 +18,24 @@
                    Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
       background:#fff;
     }
-
-    .box{max-width:820px;margin:0 auto;}
+    .box{max-width:820px;margin:0 auto; min-height: 720px;}
     .divider{height:1px;background:rgba(0,0,0,.08);margin:22px 0;}
+    .title{font-size:13px;letter-spacing:.12em;color:rgba(0,0,0,.45);margin-bottom:10px;}
+    .hint{font-size:14px;color:rgba(0,0,0,.78);line-height:1.75;margin-bottom:14px;}
 
-    .title{
-      font-size:13px;
-      letter-spacing:.12em;
-      color:rgba(0,0,0,.45);
-      margin-bottom:10px;
-    }
-
-    .hint{
-      font-size:14px;
-      color:rgba(0,0,0,.78);
-      line-height:1.75;
-      margin-bottom:14px;
-    }
-
-    .qr{
-      display:flex;
-      gap:26px;
-      flex-wrap:wrap;
-    }
-
+    .qr{display:flex;gap:26px;flex-wrap:wrap;}
     .qritem img{
-      width:150px;
-      height:150px;
-      object-fit:contain;
-      border-radius:14px;
-      border:1px solid rgba(0,0,0,.08);
-      background:#fff;
-      display:block;
+      width:150px;height:150px;object-fit:contain;
+      border-radius:14px;border:1px solid rgba(0,0,0,.08);
+      background:#fff;display:block;
     }
+    .cap{margin-top:8px;font-size:13px;color:rgba(0,0,0,.6);}
 
-    .cap{
-      margin-top:8px;
-      font-size:13px;
-      color:rgba(0,0,0,.6);
-    }
+    /* 评论区留足高度，避免 iframe 里显得“空” */
+    #giscus_container{min-height:520px;}
   </style>
 
-  <!-- LikeBtn -->
+  <!-- LikeBtn（点赞） -->
   <script>
     (function(d,e,s){
       if(d.getElementById("likebtn_wjs")) return;
@@ -90,32 +66,25 @@
 
     <div class="qr">
       <div class="qritem">
-        <img src="https://raw.githubusercontent.com/greyson9213-png/my-notion-comments/main/wechat.jpg" />
+        <img src="https://raw.githubusercontent.com/greyson9213-png/my-notion-comments/main/wechat.jpg" alt="WeChat Pay" />
         <div class="cap">微信打赏</div>
       </div>
-
       <div class="qritem">
-        <img src="https://raw.githubusercontent.com/greyson9213-png/my-notion-comments/main/alipay.jpg" />
+        <img src="https://raw.githubusercontent.com/greyson9213-png/my-notion-comments/main/alipay.jpg" alt="Alipay" />
         <div class="cap">支付宝打赏</div>
       </div>
     </div>
 
     <div class="divider"></div>
 
-    <!-- COMMENTS -->
+    <!-- COMMENTS (Giscus) -->
     <div class="title">COMMENTS</div>
-    <div class="hint">欢迎留言（名字随便写个称呼即可）。</div>
+    <div class="hint">欢迎留言（需要使用 GitHub 登录，能有效避免垃圾评论）。</div>
 
-    <div id="cusdis_thread"
-      data-host="https://cusdis.com"
-      data-app-id="fed5074a-893a-4a76-b4b3-8f6d28e6397"
-      data-page-id="default"
-      data-page-url=""
-      data-page-title="Comments">
-    </div>
+    <div id="giscus_container"></div>
 
     <script>
-      // 自动匹配 Notion 每篇文章
+      // ====== 自动为每篇文章生成稳定唯一ID（用于：点赞 + 评论）======
       function hashToId(str){
         let h = 2166136261;
         for(let i=0;i<str.length;i++){
@@ -129,17 +98,10 @@
       const ref = document.referrer || "";
       const autoKey = ref || location.href;
 
+      // 每篇文章的唯一标识：优先你手动传 id，否则用 referrer 自动生成
       const pageId = qs.get("id") || hashToId(autoKey);
-      const pageUrl = qs.get("url") || ref || location.href;
-      const pageTitle = qs.get("title") || "Comments";
 
-      // Cusdis
-      const c = document.getElementById("cusdis_thread");
-      c.setAttribute("data-page-id", pageId);
-      c.setAttribute("data-page-title", pageTitle);
-      c.setAttribute("data-page-url", pageUrl);
-
-      // LikeBtn
+      // ====== LikeBtn：每篇文章独立点赞 ======
       const likeWrap = document.getElementById("like_wrap");
       likeWrap.innerHTML = `
         <span class="likebtn-wrapper"
@@ -151,9 +113,39 @@
           data-popup_disabled="true">
         </span>
       `;
-    </script>
 
-    <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+      // ====== Giscus：每篇文章独立评论（mapping=specific + term=pageId）======
+      const s = document.createElement("script");
+      s.src = "https://giscus.app/client.js";
+      s.async = true;
+      s.crossOrigin = "anonymous";
+
+      s.setAttribute("data-repo", "greyson9213-png/my-notion-comments");
+      s.setAttribute("data-repo-id", "R_kgDORWOOag");
+      s.setAttribute("data-category", "General");
+      s.setAttribute("data-category-id", "DIC_kwDORWOOas4C3AiS");
+
+      s.setAttribute("data-mapping", "specific");
+      s.setAttribute("data-term", pageId);
+
+      s.setAttribute("data-strict", "0");
+      s.setAttribute("data-reactions-enabled", "1");
+      s.setAttribute("data-emit-metadata", "0");
+
+      // 你之前是 bottom；我建议改成 top（更像博客）：
+      // 如果你坚持 bottom，把 "top" 改回 "bottom" 即可
+      s.setAttribute("data-input-position", "top");
+
+      // 主题：跟随系统浅色/深色
+      s.setAttribute("data-theme", "preferred_color_scheme");
+
+      // 语言：建议 zh-CN（如果你想英文，把 zh-CN 改回 en）
+      s.setAttribute("data-lang", "zh-CN");
+
+      s.setAttribute("data-loading", "lazy");
+
+      document.getElementById("giscus_container").appendChild(s);
+    </script>
 
   </div>
 </body>
